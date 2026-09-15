@@ -16,6 +16,15 @@ footer {
     background: #6b4f4f;
 }
 
+header {
+    position: relative;
+    z-index: 3;
+}
+
+main {
+    position: relative;
+}
+
 .navbar {
     display: flex;
     align-items: center;
@@ -59,6 +68,90 @@ footer {
     place-items: center;
     overflow: hidden;
     background: linear-gradient(rgba(65, 43, 43, .6), rgba(65, 43, 43, .6)), #987575;
+}
+
+.hero-waves {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.hero-waves path {
+    fill: none;
+    stroke: rgba(244, 199, 161, .22);
+    stroke-width: 2;
+    animation: wave-drift 14s ease-in-out infinite alternate;
+}
+
+.hero-waves path:nth-child(even) {
+    stroke: rgba(255, 250, 243, .14);
+    stroke-width: 1.5;
+    animation-duration: 18s;
+    animation-direction: alternate-reverse;
+}
+
+.hero-waves path:nth-child(4n-1) {
+    animation-duration: 16s;
+}
+
+.hero-waves path:nth-child(4n+1) {
+    animation-duration: 21s;
+}
+
+@keyframes wave-drift {
+    from { transform: translateX(-25px); }
+    to   { transform: translateX(25px); }
+}
+
+.hero-vines {
+    position: absolute;
+    top: 0;
+    width: 170px;
+    height: 100%;
+    pointer-events: none;
+}
+
+.hero-vines .vine-stem {
+    fill: none;
+    stroke: rgba(125, 143, 100, .65);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.hero-vines .vine-tendril {
+    stroke-width: 1.8;
+}
+
+.hero-vines use {
+    fill: rgba(135, 160, 110, .55);
+}
+
+.hero-vines-left {
+    left: 0;
+    transform-origin: 50% 0;
+    animation: vine-sway-left 9s ease-in-out infinite alternate;
+}
+
+.hero-vines-right {
+    right: 0;
+    transform-origin: 50% 0;
+    animation: vine-sway-right 11s ease-in-out infinite alternate;
+}
+
+@keyframes vine-sway-left {
+    from { transform: rotate(-1.6deg); }
+    to   { transform: rotate(1.6deg); }
+}
+
+@keyframes vine-sway-right {
+    from { transform: scaleX(-1) rotate(-1.6deg); }
+    to   { transform: scaleX(-1) rotate(1.6deg); }
+}
+
+@media (max-width: 640px) {
+    .hero-vines { width: 100px; }
 }
 
 .hero-content {
@@ -162,9 +255,9 @@ footer {
 .menu-category {
     display: block;
     width: 100%;
-    min-height: 180px;
+    min-height: 120px;
     margin: 0;
-    padding: 18px 16px;
+    padding: 10px 12px 14px;
     text-align: left;
 }
 
@@ -177,19 +270,32 @@ footer {
 #tea {
     grid-column: 1;
     grid-row: 2;
-    transform: translateY(-50px);
+    transform: translateY(-90px);
+    transition: transform 0.3s ease;
+}
+
+#coffee:has(details[open]) ~ #tea {
+    transform: translateY(0);
 }
 
 #breakfast {
     grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: stretch;
+    grid-row: 1;
+    align-self: start;
+    min-height: 90px;
 }
 
 #pastries {
-    grid-column: 1;
-    grid-row: 3;
-    transform: translateY(-100px);
+    grid-column: 2;
+    grid-row: 2;
+}
+
+#coffee:has(details[open]) ~ #pastries {
+    transform: translateY(-193px);
+}
+
+#breakfast:has(details[open]) ~ #pastries {
+    transform: translateY(0);
 }
 
 .menu-category h2 {
@@ -204,6 +310,55 @@ footer {
 
 .menu-category ul {
     padding-left: 22px;
+    margin: 0;
+}
+
+.menu-dropdown {
+    margin-top: 12px;
+    border: 1px solid #eadbd0;
+    border-radius: 10px;
+    background: #fffaf6;
+    overflow: hidden;
+}
+
+.menu-dropdown summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+    list-style: none;
+    color: #6b4f4f;
+    font-weight: bold;
+    background: #f9efe8;
+    transition: background 0.2s;
+}
+
+.menu-dropdown summary::after {
+    content: "▾";
+    font-size: 0.85rem;
+    transition: transform 0.2s;
+}
+
+.menu-dropdown summary:hover {
+    background: #f3e3d3;
+}
+
+.menu-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.menu-dropdown[open] summary {
+    border-bottom: 1px solid #eadbd0;
+    background: #f3e3d3;
+}
+
+.menu-dropdown[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.menu-dropdown ul {
+    padding: 10px 18px 14px 36px;
     margin: 0;
 }
 
@@ -229,6 +384,29 @@ footer {
     font-size: .9rem;
 }
 
+@media (min-width: 801px) {
+    .menu-category {
+        min-height: 100px;
+        padding: 8px 10px 12px;
+        font-size: .9rem;
+        line-height: 1.4;
+    }
+
+    #breakfast {
+        min-height: 80px;
+        align-self: start;
+    }
+
+    .menu-dropdown summary {
+        padding: 10px 12px;
+        font-size: .9rem;
+    }
+
+    .menu-dropdown ul {
+        padding: 8px 14px 10px 32px;
+    }
+}
+
 @media (max-width: 800px) {
     .navbar {
         flex-direction: column;
@@ -243,14 +421,86 @@ footer {
 }
 
 @media (max-width: 520px) {
+    .navbar {
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px 16px 12px;
+        text-align: left;
+    }
+
+    .logo {
+        justify-content: center;
+        font-size: 21px;
+    }
+
+    .nav-links {
+        flex-wrap: nowrap;
+        gap: 18px;
+        overflow-x: auto;
+        padding: 2px 2px 5px;
+        scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-links a {
+        flex: 0 0 auto;
+        font-size: .9rem;
+    }
+
+    .hero {
+        min-height: 440px;
+        padding: 48px 18px 58px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2.2rem, 12vw, 3.5rem);
+        line-height: 1.1;
+    }
+
+    .tagline {
+        font-size: 1.05rem;
+    }
+
+    .offers,
+    .experience,
+    .story,
+    .menu,
+    .visit,
+    .order {
+        padding: 48px 16px;
+    }
+
     .offer-container,
     .feature-grid {
         grid-template-columns: 1fr;
     }
 
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
     .menu-category {
         display: block;
         width: 100%;
-        margin: 15px 0;
+        min-height: 0;
+        margin: 0;
+        padding: 20px 18px;
+    }
+
+    #coffee,
+    #tea,
+    #breakfast,
+    #pastries {
+        grid-column: auto;
+        grid-row: auto;
+        transform: none;
+    }
+
+    .visit-info {
+        padding: 20px 18px;
     }
 }
